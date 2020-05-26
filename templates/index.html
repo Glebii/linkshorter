@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>LINKSHORTER</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="jumbotron mt-3">
+        {%if link %}
+        <h1>Поздравляем , вот ваша новая укороченная ссылка :)</h1>
+        <h3>http://localhost:9999/{{link.code}}</h3>
+        {%endif%}
+        <form action="/create_link" method="POST">
+          <div class="form-group">
+            <label for="link_input">Оригинальная ссылка {{ foo }}</label>
+            <input
+              id="link_input"
+              name="url"
+              placeholder="Пример: http://google.com"
+            />
+          </div>
+          <button class="btn btn-primary">Создать короткую версию</button>
+        </form>
+        <table>
+          {% for link in links %}
+          <tr>
+            <td>{{link.id}}</td>
+            <td>{{link.original_url}}</td>
+            <td>{{link.code}}</td>
+            <td>{{link.created_at}}</td>
+            <td>{{link.redirects_count}}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

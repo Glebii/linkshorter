@@ -33,6 +33,7 @@ class Server:
         try:
             response = self.router.process_request(req)  # bytes -> Response
         except HttpServerException as e:
+            logger.exception(e)
             response = TextResponse()
             response.status = e.status
             response.body = e.msg

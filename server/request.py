@@ -9,11 +9,12 @@ class Request:
     port - port клинета
     method - GET/POST/DELETE/PUT/PATCH
     path - URI; Example: /some/path/
+    query - Queystring; Example: ?key=value&key2=value
     headers - Dict[str, str]; Example: {"Accept": "*/*"}
     """
 
     HTTP_START_LINE_RE = re.compile(
-        r"^(?P<method>[A-Z]+?)\s(?P<path>.+?)\sHTTP\/[1-9\.]{1,4}$"
+        r"^(?P<method>[A-Z]+?)\s(?P<path>.+?)(\?(?P<querystring>.+?))?\sHTTP\/[1-9\.]{1,4}$"
     )
     HTTP_HEADER_RE = re.compile(r"^(?P<key>.+?):(?P<value>.+?)$")
 
@@ -26,6 +27,7 @@ class Request:
         if start_line_match:
             method = start_line_match.group("method")
             path = start_line_match.group("path")
+            querystring = start_line_match.group("querystring")
         else:
             raise Exception("Invalid start line in HTTP request")
         # Парсим заголовки
@@ -46,13 +48,14 @@ class Request:
         if body_start_line:
             body = b"\r\n".join(lines[body_start_line + 1 :])
 
-        return cls(addr[0], addr[1], method, path, headers, body)
+        return cls(addr[0], addr[1], method, path, querystring, headers, body)
 
-    def __init__(self, ip, port, method, path, headers, body):
+    def __init__(self, ip, port, method, path, qs, headers, body):
         self.ip = ip  # type: str
         self.port = port  # type: int
         self.method = method  # type: str
         self.path = path  # type: str
+        self.qs = qs  # type: str
         self.headers = headers  # type: Dict[str, str]
         self.body = body  # type: bytes
 

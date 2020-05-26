@@ -101,3 +101,9 @@ class JsonResponse(Response):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.addHeader("Content-Type", "application/json; charset=UTF-8")
+
+class RedirectResponse(Response):
+    def __init__ (self, location:str ,*args ,**kwargs):
+        super().__init__(HTTPStatus.FOUND ,*args,**kwargs)
+        self.body = ''
+        self.addHeader("Location",location)
